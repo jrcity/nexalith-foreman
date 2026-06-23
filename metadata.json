@@ -1,37 +1,37 @@
 {
-  "team_id": "your-team-id",
-  "domain": "coding_assistants",
+  "team_id": "1056817-nexalith-foreman",
+  "domain": "autonomous_ai_agents",
   "language_scope": ["en"],
   "african_alpha_claim": false,
   "budget_laptop_claim": true,
   "submitter": {
-    "name": "your-name",
-    "email": "your-email@domain.com",
-    "github_handle": "your-github"
+    "name": "Redemption Jonathan",
+    "email": "redemptionjonathan1@gmail.com",
+    "github_handle": "jrcity"
   },
   "cross_disciplinary_pairing": {
-    "discipline": "education",
+    "discipline": "enterprise_operations",
     "load_bearing": true,
-    "description": "Brief description of how your model serves a real-world domain."
+    "description": "The model is the reasoning core of an autonomous orchestration agent that executes real HR, CRM, and CMS workflows over a local operational dataset via tool-calling and retrieval-augmented generation. Without the model, the agent has no decision-making capability — the pairing is structural, not cosmetic."
   },
   "test_prompts": [
     {
       "prompt_id": "tp_001",
-      "prompt": "Write a Python function that reads a CSV file and returns the column with the highest mean value."
+      "prompt": "One of our sales reps has three deals that have had no activity in over two weeks. Find them and draft a short follow-up message for each."
     },
     {
       "prompt_id": "tp_002",
-      "prompt": "Explain the difference between a list and a tuple in Python, and give one example where each is the better choice."
+      "prompt": "We just hired a new employee starting Monday. Set up their onboarding checklist, and let me know what CMS content needs to be published for the new-hire announcement."
     }
   ],
   "model": {
-    "name": "SmolLM2-135M-Instruct-Q4_K_M",
+    "name": "Qwen2.5-3B-Instruct-Q4_K_M",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "135M",
+    "parameters_estimate": "3.4B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/SmolLM2-135M-Instruct-Q4_K_M.gguf"
+    "model_path": "model/qwen2.5-3b-instruct-q4_k_m.gguf"
   }
 }
