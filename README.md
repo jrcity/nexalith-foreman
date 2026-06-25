@@ -1,190 +1,131 @@
-# ADTC 2026 — Submission Template
+# Nexalith Foreman
 
-This is the official template repository for the **Africa Deep Tech Challenge 2026** Laptop LLM track.
+Offline AI ops agent for HR, CRM, and CMS workflows. Runs entirely on an 8GB laptop — no cloud, no API calls during inference.
 
-Fork this repository, fill in the required files, and submit your repository URL via [adtc-2026.devpost.com](https://adtc-2026.devpost.com).
+Built for the **Africa Deep Tech Challenge 2026**, Autonomous AI Agents track. This is early-stage R&D for [Nexalith](https://nexalith.co)'s own Internal OS.
 
----
-
-## ✅ Submission Checklist
-
-Before submitting, confirm every item:
-
-- [ ] Your repository is **public** on GitHub
-- [ ] `metadata.json` is fully filled in — no placeholder values remain
-- [ ] `metadata.json` contains exactly **2 test prompts** in the `test_prompts` array, written for your chosen domain
-- [ ] `download_model.sh` successfully downloads your model to `model/`
-- [ ] The downloaded file is a valid **GGUF format** (`.gguf`) weight file
-- [ ] `model/*.gguf` is listed in `.gitignore` — do **not** commit large weight files
-- [ ] `REPORT.md` is filled in with your technical writeup
-- [ ] Running `bash download_model.sh` completes without errors
-- [ ] Your model runs entirely **offline** — zero external network calls during inference
+See `REPORT.md` for the full technical writeup (problem, design decisions, constraints, benchmarks).
 
 ---
 
-## 📁 Required File Structure
+## Quick Start
 
-```
-your-submission/
-├── metadata.json          ← Required. Team, model, and test prompt metadata.
-├── download_model.sh      ← Required. Downloads your .gguf model weight file.
-├── REPORT.md              ← Required. Technical writeup (problem, design, benchmarks).
-├── model/
-│   └── your-model.gguf   ← Downloaded by the script above. Do NOT commit.
-└── .gitignore             ← Must exclude *.gguf and model/ from version control.
-```
-
----
-
-## 📝 metadata.json
-
-Fill in every field. No field should remain at its placeholder value.
-
-```json
-{
-  "team_id": "your-team-id",
-  "domain": "coding_assistants",
-  "language_scope": ["en"],
-  "african_alpha_claim": false,
-  "budget_laptop_claim": true,
-  "submitter": {
-    "name": "your-name",
-    "email": "your-email@domain.com",
-    "github_handle": "your-github"
-  },
-  "cross_disciplinary_pairing": {
-    "discipline": "education",
-    "load_bearing": true,
-    "description": "Brief description of how your model serves a real-world domain."
-  },
-  "test_prompts": [
-    {
-      "prompt_id": "tp_001",
-      "prompt": "Your first test prompt, written for your chosen domain."
-    },
-    {
-      "prompt_id": "tp_002",
-      "prompt": "Your second test prompt, written for your chosen domain."
-    }
-  ],
-  "model": {
-    "name": "YourModel-Q4_K_M",
-    "runtime": "llama.cpp",
-    "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "1.1B",
-    "packaging": "binary_bundle"
-  },
-  "_runtime": {
-    "model_path": "model/your-model.gguf"
-  }
-}
-```
-
-### Field Reference
-
-| Field | Required | Description |
-|---|---|---|
-| `team_id` | ✅ | Your unique team ID as registered on the ADTF portal |
-| `domain` | ✅ | Your challenge track. One of: `math_scientific_reasoning`, `healthcare_medical`, `agriculture`, `creative_writing`, `coding_assistants`, `corporate_enterprise`, `autonomous_ai_agents` |
-| `language_scope` | ✅ | Array of BCP-47 language codes. Must include at least one. |
-| `african_alpha_claim` | ✅ | `true` only if claiming the African Use Case Bonus |
-| `budget_laptop_claim` | ✅ | Must be `true` — all submissions target the 8 GB RAM laptop profile |
-| `submitter.name` | ✅ | Full name of the team member submitting the run |
-| `submitter.email` | ✅ | Valid email address linked to the registered team |
-| `submitter.github_handle` | ✅ | Verifiable GitHub username |
-| `cross_disciplinary_pairing.discipline` | ✅ | The deep-tech discipline your model serves |
-| `cross_disciplinary_pairing.load_bearing` | ✅ | `true` if the pairing is integral to the submission, not cosmetic |
-| `test_prompts` | ✅ | **Exactly 2 prompts** in your chosen domain. Organizers will add 2 hidden prompts to test for overfitting. |
-| `model.runtime` | ✅ | Must be `llama.cpp`. No other runtime is accepted. |
-| `model.quantization` | ✅ | Must be a GGUF quantization format (e.g. `GGUF Q4_K_M`, `GGUF Q5_K_M`) |
-| `model.parameters_estimate` | ✅ | Approximate parameter count (e.g. `135M`, `1.1B`, `7B`) |
-| `model.packaging` | ✅ | How the model is packaged. One of: `docker_image`, `docker_build_from_repo`, `binary_bundle` |
-| `_runtime.model_path` | ✅ | Relative path from repo root to your `.gguf` file (e.g. `model/my-model.gguf`) |
-
----
-
-## 📥 download_model.sh
-
-This script **must** download your model weight file to the `model/` directory.
-
-Rules:
-- Must be idempotent — safe to run multiple times without re-downloading.
-- Must work without any credentials — your weights must be publicly accessible.
-- The downloaded file path must exactly match `_runtime.model_path` in `metadata.json`.
-
-Recommended hosting options for your weights:
-- [Hugging Face](https://huggingface.co) — public model repos (free, best for GGUF files)
-- GitHub Release Assets — attach the `.gguf` file to a GitHub Release
-- Any stable public URL (GCS public bucket, S3 public object, etc.)
-
----
-
-## 📄 REPORT.md
-
-Your technical writeup. Judges and the LLM-based audit system will read this to understand your submission. Cover:
-
-1. **Problem** — What problem are you solving? Who is the target user in an African context?
-2. **Design Decisions** — What model did you start from? Why that quantization level? What alternatives did you evaluate?
-3. **Constraints** — What hardware, connectivity, or data constraints shaped your approach?
-4. **Benchmarks** — What inference speed and memory numbers did you observe on your development machine?
-
-Keep it factual and specific. One to three pages is ideal.
-
----
-
-## 🧪 Local Testing
-
-The ADTC profiler is open source. Install it directly from the official repository:
+### 1. Download the model
 
 ```bash
-pip install "git+https://github.com/Africa-Deep-Tech-Foundation/adtc-profiler.git"
-```
-
-Then run a local smoke test before submitting:
-
-```bash
-# 1. Download your weights
 bash download_model.sh
-
-# 2. Run the profiler in participant mode
-adtc-profiler run \
-  --submission . \
-  --mode participant \
-  --output submission.json \
-  --skip-accuracy
-
-# 3. Review your report
-cat submission.json
 ```
 
-A valid run produces a `submission.json` with `"measured_on": "participant_laptop"`.
+This fetches `qwen2.5-3b-instruct-q4_k_m.gguf` (~2GB) to `model/`. Safe to re-run — it skips the download if the file already exists.
 
-The profiler source code, including the thermal monitoring logic and scoring formulas, is publicly readable at:
-[github.com/Africa-Deep-Tech-Foundation/adtc-profiler](https://github.com/Africa-Deep-Tech-Foundation/adtc-profiler)
+### 2. Build llama.cpp (if you don't already have it)
+
+```bash
+git clone --depth 1 https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+cmake -B build -DGGML_NATIVE=ON
+cmake --build build --config Release -j$(nproc)
+```
+
+### 3. Start the model server
+
+From the `nexalith-foreman` repo root:
+
+```bash
+/path/to/llama.cpp/build/bin/llama-server \
+  -m model/qwen2.5-3b-instruct-q4_k_m.gguf \
+  --ctx-size 4096 --threads 4 --port 8080
+```
+
+Leave this running in its own terminal. Wait for `server is listening on http://127.0.0.1:8080` before continuing.
+
+**Linux power-management note:** if generation speed seems far below ~8 tokens/sec, check your CPU power profile — see "A note on CPU power management" below before assuming the model itself is slow.
+
+### 4. Run the agent
+
+**Option A — CLI:**
+
+```bash
+pip install -r agent/requirements.txt --break-system-packages
+python3 agent/cli.py
+```
+
+Type a request at the `foreman>` prompt, e.g.:
+```
+One of our sales reps has three deals that have had no activity in over two weeks. Find them and draft a short follow-up message for each.
+```
+
+Type `exit` to quit.
+
+**Option B — Web dashboard:**
+
+```bash
+pip install -r agent/requirements.txt --break-system-packages
+python3 agent/web/server.py
+```
+
+Open `http://localhost:8090` in a browser. The dashboard shows a chat panel alongside a live status board (open CRM deals, upcoming onboarding, and a running achievements feed that updates after each request).
+
+Both interfaces call the exact same orchestrator logic (`agent/orchestrator.py`) — neither duplicates the other's behavior.
 
 ---
 
-## ⚠️ Rules
+## What it does
 
-1. **Public repository required.** Your repository must be public at the time of evaluation.
-2. **No model weights in git.** Add `*.gguf` and `model/` to your `.gitignore`. The evaluator downloads weights fresh via `download_model.sh`.
-3. **100% offline during evaluation.** Your model must run with zero external network dependencies during our testing window. `download_model.sh` runs before the profiler starts, but once profiling begins, no outbound requests are permitted.
-4. **llama.cpp only.** All models must use GGUF weights and run through `llama.cpp`. No other runtime is supported by our evaluation framework.
-5. **8 GB RAM limit.** Your model must run within the standard laptop profile (4 vCPU, 8 GB RAM, integrated GPU only). Out-of-memory errors during evaluation result in automatic disqualification.
-6. **No size restriction.** There is no parameter count or file size cap — but the 8 GB RAM constraint is strict. Plan your quantization level accordingly.
-7. **Two test prompts required.** Your `metadata.json` must include exactly 2 prompts in the `test_prompts` array. Organizers will generate 2 additional hidden prompts within your domain. All 4 are used for scoring.
+Nexalith Foreman has three tools the model can call, based on the user's natural-language request:
 
----
+- **`crm_followup`** — finds CRM deals with no activity in N+ days, for drafting follow-up messages
+- **`hr_lookup`** — finds employees starting within N days and their onboarding checklist status
+- **`cms_publish_check`** — finds draft CMS content linked to a specific employee (e.g. a new-hire announcement still in draft)
 
-## 🆘 Support
+The model decides which tool(s) to call, in what order, and chains them across domains when a request calls for it — e.g. a new-hire request triggers both `hr_lookup` and `cms_publish_check` in one turn, with the employee ID flowing from the first tool's result into the second's call, without being told explicitly. Every completed action is logged to `agent/data/achievements_log.json` with a timestamp and which tools fired — a verifiable audit trail, not just a prose claim.
 
-Open an issue in this repository or contact the ADTF team at challenge@africadeeptech.org.
-
-View the full eligibility rules at [adtc-2026.devpost.com/rules](https://adtc-2026.devpost.com/rules).
+The underlying data (`agent/data/seed_corpus.json`) is a synthetic but structurally realistic HR/CRM/CMS dataset, since no production Nexalith Internal OS data exists yet at this early R&D stage.
 
 ---
 
-## 📄 License
+## A note on CPU power management
 
-This template is licensed under the terms of the [GNU GPL v3 License](LICENSE).
+During development we found that Linux power-management daemons (`power-profiles-daemon`, `TLP`) can silently cap CPU frequency well below the chip's real maximum, independent of the kernel's CPU governor setting. If you're benchmarking or running this on a laptop and generation speed seems unexpectedly low, check:
 
+```bash
+powerprofilesctl get
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq   # compare to cpuinfo_max_freq
+```
+
+We ship and benchmark under the `balanced` profile specifically because the `performance` profile, while faster (~13.5 t/s), drove sustained core temperatures to 97°C with confirmed throttling on our hardware — over the competition's 85°C thermal threshold. See `REPORT.md` → Constraints for the full investigation.
+
+---
+
+## Repository structure
+
+```
+nexalith-foreman/
+├── metadata.json              # required by ADTC profiler
+├── download_model.sh          # downloads the .gguf model weight
+├── REPORT.md                  # full technical writeup
+├── model/                     # downloaded model lives here (gitignored)
+├── agent/
+│   ├── orchestrator.py        # core tool-calling loop
+│   ├── cli.py                 # interactive terminal interface
+│   ├── tools/                 # crm_followup, hr_lookup, cms_publish, achievement_log
+│   ├── rag/retriever.py       # structured retrieval over the local dataset
+│   ├── data/
+│   │   ├── seed_corpus.json       # synthetic HR/CRM/CMS records
+│   │   └── achievements_log.json  # append-only action audit trail (generated at runtime)
+│   └── web/
+│       ├── server.py          # FastAPI backend (wraps orchestrator.py, no duplicated logic)
+│       └── static/index.html  # dashboard frontend
+└── requirements.txt
+```
+
+---
+
+## Testing locally with the official profiler
+
+```bash
+pip install "git+https://github.com/Africa-Deep-Tech-Foundation/adtc-profiler.git" --break-system-packages
+adtc-profiler run --submission . --mode participant --output submission.json --skip-accuracy
+```
+
+See `REPORT.md` for our own recorded benchmark results and the power-management findings that shaped our final configuration choice.
