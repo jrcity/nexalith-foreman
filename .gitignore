@@ -15,3 +15,4 @@ __pycache__/
 submission.json
 audit.json
 agent/data/achievements_log.json
+agent/data/foreman.db

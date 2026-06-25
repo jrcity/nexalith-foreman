@@ -41,7 +41,15 @@ Leave this running in its own terminal. Wait for `server is listening on http://
 
 **Linux power-management note:** if generation speed seems far below ~8 tokens/sec, check your CPU power profile — see "A note on CPU power management" below before assuming the model itself is slow.
 
-### 4. Run the agent
+### 4. Build the local database
+
+```bash
+python3 agent/rag/migrate_to_sqlite.py
+```
+
+This builds `agent/data/foreman.db` from the synthetic seed dataset (`agent/data/seed_corpus.json`). Safe to re-run — it rebuilds the tables from scratch each time.
+
+### 5. Run the agent
 
 **Option A — CLI:**
 
