@@ -1,0 +1,84 @@
+{
+  "hr_employees": [
+    {
+      "id": "emp_001",
+      "name": "Amaka Obi",
+      "role": "Backend Engineer",
+      "start_date": "2026-06-29",
+      "status": "pending_onboarding",
+      "onboarding_checklist": [
+        {"item": "Provision laptop and accounts", "done": false},
+        {"item": "Assign NexID credentials", "done": false},
+        {"item": "Schedule first-week 1:1", "done": false},
+        {"item": "Add to engineering Slack channels", "done": false}
+      ]
+    },
+    {
+      "id": "emp_002",
+      "name": "Tunde Bakare",
+      "role": "Customer Success Lead",
+      "start_date": "2026-03-10",
+      "status": "active",
+      "onboarding_checklist": [
+        {"item": "Provision laptop and accounts", "done": true},
+        {"item": "Assign NexID credentials", "done": true},
+        {"item": "Schedule first-week 1:1", "done": true},
+        {"item": "Add to engineering Slack channels", "done": true}
+      ]
+    }
+  ],
+  "crm_deals": [
+    {
+      "id": "deal_101",
+      "client_name": "Lagos Fresh Foods",
+      "rep": "Tunde Bakare",
+      "stage": "negotiation",
+      "value_usd": 4200,
+      "last_activity_date": "2026-06-05",
+      "notes": "Awaiting response on revised pricing sent two weeks ago."
+    },
+    {
+      "id": "deal_102",
+      "client_name": "Kano Textiles Ltd",
+      "rep": "Tunde Bakare",
+      "stage": "proposal_sent",
+      "value_usd": 1800,
+      "last_activity_date": "2026-06-08",
+      "notes": "Proposal sent, no response since."
+    },
+    {
+      "id": "deal_103",
+      "client_name": "Abuja Logistics Co",
+      "rep": "Tunde Bakare",
+      "stage": "discovery",
+      "value_usd": 2600,
+      "last_activity_date": "2026-06-22",
+      "notes": "Active conversation, demo scheduled next week."
+    },
+    {
+      "id": "deal_104",
+      "client_name": "Port Harcourt Energy",
+      "rep": "Tunde Bakare",
+      "stage": "negotiation",
+      "value_usd": 9000,
+      "last_activity_date": "2026-06-04",
+      "notes": "Large deal, client requested custom SLA terms, no follow-up sent yet."
+    }
+  ],
+  "cms_content": [
+    {
+      "id": "cms_201",
+      "title": "Welcome to the Team: New Hire Announcements",
+      "status": "draft",
+      "linked_to": "emp_001",
+      "body_summary": "Template announcement post for new engineering hires, needs name and role filled in before publishing."
+    },
+    {
+      "id": "cms_202",
+      "title": "Q2 Product Update",
+      "status": "published",
+      "linked_to": null,
+      "body_summary": "Already live on the blog, no action needed."
+    }
+  ]
+}

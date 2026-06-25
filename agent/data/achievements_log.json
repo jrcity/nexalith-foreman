@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2026-06-24T12:44:12",
+    "action": "crm_followup",
+    "summary": "Handled request: One of our sales reps has three deals that have had no activity in over two week"
+  },
+  {
+    "timestamp": "2026-06-24T12:48:25",
+    "action": "hr_lookup,cms_publish_check",
+    "summary": "Handled request: We just hired a new employee starting Monday. Set up their onboarding checklist,"
+  },
+  {
+    "timestamp": "2026-06-24T13:32:55",
+    "action": "crm_followup",
+    "summary": "Handled request: One of our sales reps has three deals that have had no activity in over two week"
+  },
+  {
+    "timestamp": "2026-06-24T13:34:11",
+    "action": "hr_lookup,cms_publish_check",
+    "summary": "Handled request: We just hired a new employee starting Monday. Set up their onboarding checklist,"
+  },
+  {
+    "timestamp": "2026-06-25T01:54:56",
+    "action": "crm_followup,hr_lookup,cms_publish_check",
+    "summary": "Handled request: what do I have on CRM, CMS and HR todo"
+  },
+  {
+    "timestamp": "2026-06-25T02:01:59",
+    "action": "crm_followup",
+    "summary": "Handled request: give me leads about aour CRM bucket what can we do next on active customers"
+  }
+]
