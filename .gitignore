@@ -14,3 +14,4 @@ __pycache__/
 # Local profiler output
 submission.json
 audit.json
+agent/data/achievements_log.json

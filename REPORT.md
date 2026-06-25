@@ -8,7 +8,7 @@
 
 ## Problem
 
-African small and medium enterprises run their operations — HR, customer relationships, content — on a patchwork of spreadsheets, WhatsApp threads, and memory, because cloud-hosted SaaS tooling assumes stable connectivity and recurring subscription costs that many SMEs cannot reliably sustain. The same constraint applies to early-stage African tech ventures themselves: as a solo founder building Nexalith, an infrastructure software company in Abuja, Nigeria, I need internal HR, CRM, and CMS automation, but every cloud-AI option that could provide it depends on per-token API costs and constant connectivity — a real risk in a market where power and bandwidth are not guaranteed.
+African small and medium enterprises run their operations — HR, customer relationships, content — on a patchwork of spreadsheets, WhatsApp threads, and memory, because cloud-hosted SaaS tooling assumes stable connectivity and recurring subscription costs that many SMEs cannot reliably sustain. The same constraint applies to early-stage African tech ventures themselves: as a solo founder building Nexalith, an infrastructure software company in Kaduna, Nigeria, I need internal HR, CRM, and CMS automation, but every cloud-AI option that could provide it depends on per-token API costs and constant connectivity — a real risk in a market where power and bandwidth are not guaranteed.
 
 Nexalith Foreman is an offline AI agent that runs entirely on an 8GB commodity laptop and automates exactly these operational workflows — following up on stale CRM deals, running new-hire onboarding checklists, flagging what needs CMS publication — without a single network call after the model is downloaded. It is being built as real, early-stage R&D for Nexalith's own Internal OS, not a standalone demo: the target user is a founder or small operations team that needs an assistant that reasons over their actual business data, on hardware they already own.
 
@@ -55,7 +55,9 @@ Nexalith Foreman has three layers:
 
 ## Evidence of Load-Bearing Cross-Disciplinary Integration
 
-Our `cross_disciplinary_pairing` claim (enterprise operations + autonomous agent orchestration, `load_bearing: true`) is not just architectural intent — we have direct, logged evidence of it working. For the request *"We just hired a new employee starting Monday. Set up their onboarding checklist, and let me know what CMS content needs to be published for the new-hire announcement,"* the achievement log recorded:
+Our `cross_disciplinary_pairing` claim (enterprise operations + autonomous agent orchestration, `load_bearing: true`) is not just architectural intent — we have direct, logged evidence of it working. The live achievement log (`agent/data/achievements_log.json`) is runtime-generated and starts empty on every fresh clone, since it reflects whoever is currently running the agent. We've preserved one real session as a static, committed sample (`agent/data/achievements_log.sample.json`) specifically to make this evidence reproducible for review.
+
+For the request *"We just hired a new employee starting Monday. Set up their onboarding checklist, and let me know what CMS content needs to be published for the new-hire announcement,"* the sample log recorded:
 
 ```json
 {
