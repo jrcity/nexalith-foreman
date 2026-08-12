@@ -39,8 +39,10 @@ if torch.cuda.is_available():
     # V100 check
     cap = torch.cuda.get_device_capability(0)
     print(f'  Compute capability: {cap[0]}.{cap[1]}')
-    if cap[0] < 8:
-        print('  NOTE: V100 detected (compute < 8.0) — bf16 disabled, fp16 will be used.')
+    if cap[0] >= 8:
+        print('  Ada Lovelace / Ampere detected — bfloat16 supported.')
+    else:
+        print('  Older GPU detected — bfloat16 may not be supported, check train.py DTYPE.')
 "
 echo ""
 

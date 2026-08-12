@@ -1,17 +1,19 @@
 """
 Nexalith Foreman — LoRA fine-tuning script.
 
-Hardware target: AGH Cloud V100 (64GB VRAM), float16 (V100 does not
-support bfloat16). Uses Unsloth for fast, memory-efficient training.
+Hardware target: AGH Cloud RTX 6000 Ada (48GB VRAM), bfloat16.
+Ada Lovelace architecture supports bfloat16 natively — preferred over
+float16 for more numerically stable training. Uses Unsloth for fast,
+memory-efficient LoRA training.
 
 Run this on the cloud instance AFTER:
-  1. pip install unsloth
-  2. Uploading finetune_examples.jsonl to the instance
+  1. bash setup.sh
+  2. Confirming finetune_examples.jsonl is present
 
 Output: saves a merged, GGUF-quantized model to ./foreman-finetuned/
 which you download and replace your local model with.
 
-Estimated runtime: 5-15 minutes on a V100 for 15 examples x 3 epochs.
+Estimated runtime: 5-10 minutes on RTX 6000 Ada for 15 examples x 3 epochs.
 """
 
 import json
@@ -29,10 +31,10 @@ OUTPUT_DIR = "./foreman-finetuned"
 DATASET_PATH = "./finetune_examples.jsonl"
 
 MAX_SEQ_LENGTH = 4096
-DTYPE = torch.float16          # float16 required for V100
-LOAD_IN_4BIT = True            # keeps VRAM usage low even on 64GB
+DTYPE = torch.bfloat16          # bfloat16 — RTX 6000 Ada supports this natively
+LOAD_IN_4BIT = True
 
-LORA_R = 16                    # rank — higher = more capacity, more VRAM
+LORA_R = 16
 LORA_ALPHA = 16
 LORA_DROPOUT = 0.05
 TARGET_MODULES = [
@@ -41,8 +43,8 @@ TARGET_MODULES = [
 ]
 
 BATCH_SIZE = 2
-GRAD_ACCUM = 4                 # effective batch = 8
-EPOCHS = 3                     # 3 passes over 15 examples = 45 effective steps
+GRAD_ACCUM = 4
+EPOCHS = 3
 LEARNING_RATE = 2e-4
 WARMUP_RATIO = 0.1
 
@@ -125,8 +127,8 @@ trainer = SFTTrainer(
         num_train_epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
         warmup_ratio=WARMUP_RATIO,
-        fp16=True,              # float16 for V100
-        bf16=False,             # bf16 NOT supported on V100
+        fp16=False,             # not needed on Ada
+        bf16=True,              # bfloat16 on RTX 6000 Ada
         logging_steps=5,
         save_strategy="no",     # save only at the end
         output_dir=OUTPUT_DIR,
