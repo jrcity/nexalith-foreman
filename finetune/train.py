@@ -67,7 +67,8 @@ if tokenizer.pad_token is None:
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_NAME,
     quantization_config=bnb_config,
-    device_map="auto"
+    device_map="auto",
+    attn_implementation="eager"
 )
 
 # Prepare for 4-bit training (gradients checkpointing, etc.)
@@ -123,16 +124,16 @@ print("\nStarting training...")
 
 trainer = SFTTrainer(
     model=model,
-    tokenizer=tokenizer,
+    processing_class=tokenizer,
     train_dataset=dataset,
     args=SFTConfig(
         dataset_text_field="text",
-        max_seq_length=MAX_SEQ_LENGTH,
+        max_length=MAX_SEQ_LENGTH,
         per_device_train_batch_size=BATCH_SIZE,
         gradient_accumulation_steps=GRAD_ACCUM,
         num_train_epochs=EPOCHS,
         learning_rate=LEARNING_RATE,
-        warmup_ratio=WARMUP_RATIO,
+        warmup_steps=1,
         fp16=False,             
         bf16=True,              
         logging_steps=5,
