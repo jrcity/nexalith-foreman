@@ -1,15 +1,10 @@
 """
 Orchestrator: the agent's core tool-calling loop.
 
-Talks to a running llama-server instance (OpenAI-compatible API) and gives
-it access to the four domain tools. The model decides which tool(s) to
-call based on the user's natural-language request; this module executes
-the actual Python function and feeds the result back to the model for
-a final natural-language response.
-
-This is the literal "load-bearing" link in cross_disciplinary_pairing:
-remove the model and there is no decision-making about which tool to
-call or how to interpret the results — just raw JSON.
+7 tools across HR, CRM, and CMS. Deliberately scoped to three domains
+for reliability on a 3B model — the cut tools (leave, FMS invoicing,
+IT ops, CMS publishing) remain in agent/tools/ for future re-activation
+after fine-tuning improves multi-tool coherence.
 """
 from __future__ import annotations
 
@@ -20,8 +15,13 @@ from pathlib import Path
 import requests
 
 sys.path.insert(0, str(Path(__file__).parent))
-from tools.crm_followup import crm_followup
-from tools.hr_lookup import hr_lookup, hr_employee_detail
+from tools.crm_followup import (
+    crm_followup,
+    get_customer_profile,
+    update_lead_status,
+    log_sales_interaction,
+)
+from tools.hr_lookup import hr_lookup, onboard_employee
 from tools.cms_publish import cms_publish_check
 from tools.achievement_log import log_achievement
 
@@ -36,11 +36,50 @@ TOOL_DEFINITIONS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "min_days_inactive": {
-                        "type": "integer",
-                        "description": "Minimum days of inactivity to count as stale. Defaults to 14.",
-                    }
+                    "min_days_inactive": {"type": "integer", "description": "Defaults to 14."}
                 },
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_customer_profile",
+            "description": "Look up a CRM customer profile by company name.",
+            "parameters": {
+                "type": "object",
+                "properties": {"company_name": {"type": "string"}},
+                "required": ["company_name"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "update_lead_status",
+            "description": "Update a customer's CRM pipeline status, e.g. 'closed_won', 'closed_lost', 'negotiating'.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "crm_id": {"type": "string"},
+                    "status": {"type": "string"},
+                },
+                "required": ["crm_id", "status"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "log_sales_interaction",
+            "description": "Record a sales interaction note against a customer's CRM record.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "crm_id": {"type": "string"},
+                    "summary": {"type": "string"},
+                },
+                "required": ["crm_id", "summary"],
             },
         },
     },
@@ -52,10 +91,7 @@ TOOL_DEFINITIONS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "within_days": {
-                        "type": "integer",
-                        "description": "Look-ahead window in days. Defaults to 7.",
-                    }
+                    "within_days": {"type": "integer", "description": "Defaults to 7."}
                 },
             },
         },
@@ -63,16 +99,28 @@ TOOL_DEFINITIONS = [
     {
         "type": "function",
         "function": {
-            "name": "cms_publish_check",
-            "description": "Find draft CMS content linked to a specific employee ID (e.g. a new-hire announcement still in draft).",
+            "name": "onboard_employee",
+            "description": "Create a new HR profile for a hire and provision NexID credentials.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "emp_id": {
-                        "type": "string",
-                        "description": "Employee ID returned by hr_lookup, e.g. 'emp_001'.",
-                    }
+                    "name": {"type": "string"},
+                    "email": {"type": "string"},
+                    "role": {"type": "string"},
+                    "department": {"type": "string"},
                 },
+                "required": ["name", "email", "role", "department"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "cms_publish_check",
+            "description": "Find draft CMS content linked to a specific employee ID.",
+            "parameters": {
+                "type": "object",
+                "properties": {"emp_id": {"type": "string"}},
                 "required": ["emp_id"],
             },
         },
@@ -81,38 +129,46 @@ TOOL_DEFINITIONS = [
 
 TOOL_FUNCTIONS = {
     "crm_followup": crm_followup,
+    "get_customer_profile": get_customer_profile,
+    "update_lead_status": update_lead_status,
+    "log_sales_interaction": log_sales_interaction,
     "hr_lookup": hr_lookup,
+    "onboard_employee": onboard_employee,
     "cms_publish_check": cms_publish_check,
 }
 
 SYSTEM_PROMPT = (
     "You are Nexalith Foreman, an offline operations agent for a small business. "
-    "You have tools to look up CRM deals, HR onboarding status, and CMS draft content. "
-    "Use the tools to gather real facts before answering. When asked to draft messages "
-    "(e.g. follow-up emails), write them yourself based on the retrieved facts — the tools "
-    "only give you data, they do not write messages for you. Be concise and concrete."
+    "You have exactly 7 tools across three domains:\n"
+    "- CRM: crm_followup, get_customer_profile, update_lead_status, log_sales_interaction\n"
+    "- HR: hr_lookup, onboard_employee\n"
+    "- CMS: cms_publish_check\n\n"
+    "READ tools (call freely): crm_followup, get_customer_profile, hr_lookup, cms_publish_check.\n"
+    "WRITE tools (ask for confirmation first, unless the user's message is already an explicit instruction): "
+    "update_lead_status, log_sales_interaction, onboard_employee.\n\n"
+    "CRITICAL: never state a factual claim about deals, customers, employees, or content "
+    "unless you called the corresponding READ tool in THIS turn and are reporting what it "
+    "actually returned. Do not rely on what a tool returned in an earlier turn.\n\n"
+    "If a question has multiple parts across different domains, call a READ tool for EACH part. "
+    "When asked open-ended questions like 'how do we improve X', propose a specific, concrete "
+    "next action per item with brief reasoning, then ask for confirmation before calling any "
+    "WRITE tool.\n\n"
+    "Be concise and concrete."
 )
 
 
 def _call_model(messages: list[dict]) -> dict:
     response = requests.post(
         LLAMA_SERVER_URL,
-        json={
-            "messages": messages,
-            "tools": TOOL_DEFINITIONS,
-            "temperature": 0.3,
-        },
+        json={"messages": messages, "tools": TOOL_DEFINITIONS, "temperature": 0.3},
         timeout=120,
     )
     response.raise_for_status()
     return response.json()
 
 
-def run_agent(user_request: str, max_tool_rounds: int = 4) -> str:
-    """
-    Run the full tool-calling loop for a single user request.
-    Returns the final natural-language response.
-    """
+def run_agent(user_request: str, max_tool_rounds: int = 5) -> str:
+    """Run the full tool-calling loop for a single user request."""
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": user_request},
@@ -128,7 +184,6 @@ def run_agent(user_request: str, max_tool_rounds: int = 4) -> str:
 
         tool_calls = message.get("tool_calls")
         if not tool_calls:
-            # No more tool calls — this is the final answer.
             final_text = message.get("content", "")
             if tools_used:
                 log_achievement(
@@ -146,10 +201,9 @@ def run_agent(user_request: str, max_tool_rounds: int = 4) -> str:
 
             tools_used.append(fn_name)
             fn = TOOL_FUNCTIONS.get(fn_name)
-            if fn is None:
-                tool_result = {"error": f"unknown tool {fn_name}"}
-            else:
-                tool_result = fn(**fn_args)
+            tool_result = (
+                {"error": f"unknown tool {fn_name}"} if fn is None else fn(**fn_args)
+            )
 
             messages.append(
                 {
@@ -163,12 +217,10 @@ def run_agent(user_request: str, max_tool_rounds: int = 4) -> str:
 
 
 if __name__ == "__main__":
-    import sys as _sys
-
-    if len(_sys.argv) > 1:
-        query = " ".join(_sys.argv[1:])
-    else:
-        query = "One of our sales reps has three deals that have had no activity in over two weeks. Find them and draft a short follow-up message for each."
-
+    query = (
+        " ".join(sys.argv[1:])
+        if len(sys.argv) > 1
+        else "What's our biggest deal at risk right now?"
+    )
     print(f"> {query}\n")
     print(run_agent(query))
