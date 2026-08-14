@@ -7,10 +7,22 @@
       "start_date": "2026-06-29",
       "status": "pending_onboarding",
       "onboarding_checklist": [
-        {"item": "Provision laptop and accounts", "done": false},
-        {"item": "Assign NexID credentials", "done": false},
-        {"item": "Schedule first-week 1:1", "done": false},
-        {"item": "Add to engineering Slack channels", "done": false}
+        {
+          "item": "Provision laptop and accounts",
+          "done": false
+        },
+        {
+          "item": "Assign NexID credentials",
+          "done": false
+        },
+        {
+          "item": "Schedule first-week 1:1",
+          "done": false
+        },
+        {
+          "item": "Add to engineering Slack channels",
+          "done": false
+        }
       ]
     },
     {
@@ -20,14 +32,79 @@
       "start_date": "2026-03-10",
       "status": "active",
       "onboarding_checklist": [
-        {"item": "Provision laptop and accounts", "done": true},
-        {"item": "Assign NexID credentials", "done": true},
-        {"item": "Schedule first-week 1:1", "done": true},
-        {"item": "Add to engineering Slack channels", "done": true}
+        {
+          "item": "Provision laptop and accounts",
+          "done": true
+        },
+        {
+          "item": "Assign NexID credentials",
+          "done": true
+        },
+        {
+          "item": "Schedule first-week 1:1",
+          "done": true
+        },
+        {
+          "item": "Add to engineering Slack channels",
+          "done": true
+        }
+      ]
+    },
+    {
+      "id": "emp_003",
+      "name": "John Doe",
+      "email": "jdoe@example.com",
+      "role": "DevOps Engineer",
+      "department": "Engineering",
+      "start_date": "2026-08-12",
+      "status": "pending_onboarding",
+      "onboarding_checklist": [
+        {
+          "item": "Provision laptop and accounts",
+          "done": false
+        },
+        {
+          "item": "Assign NexID credentials",
+          "done": true
+        },
+        {
+          "item": "Schedule first-week 1:1",
+          "done": false
+        },
+        {
+          "item": "Add to engineering Slack channels",
+          "done": false
+        }
+      ]
+    },
+    {
+      "id": "emp_004",
+      "name": "John Doe",
+      "email": "jdoe@example.com",
+      "role": "DevOps Engineer",
+      "department": "Engineering",
+      "start_date": "2026-08-12",
+      "status": "pending_onboarding",
+      "onboarding_checklist": [
+        {
+          "item": "Provision laptop and accounts",
+          "done": false
+        },
+        {
+          "item": "Assign NexID credentials",
+          "done": true
+        },
+        {
+          "item": "Schedule first-week 1:1",
+          "done": false
+        },
+        {
+          "item": "Add to engineering Slack channels",
+          "done": false
+        }
       ]
     }
   ],
-
   "hr_leave_requests": [
     {
       "id": "leave_701",
@@ -39,7 +116,6 @@
       "manager_id": "mgr_01"
     }
   ],
-
   "crm_deals": [
     {
       "id": "deal_101",
@@ -78,7 +154,6 @@
       "notes": "Large deal, client requested custom SLA terms, no follow-up sent yet."
     }
   ],
-
   "crm_customers": [
     {
       "crm_id": "cust_201",
@@ -97,9 +172,7 @@
       "linked_deal_id": "deal_101"
     }
   ],
-
   "crm_interaction_log": [],
-
   "cms_content": [
     {
       "id": "cms_201",
@@ -118,17 +191,15 @@
       "body_summary": "Already live on the blog, no action needed."
     }
   ],
-
   "fms_invoices": [
     {
       "invoice_id": "INV-2026-088",
       "client_id": "cust_201",
-      "amount_usd": 500.00,
+      "amount_usd": 500.0,
       "description": "Q2 platform support retainer",
       "status": "paid"
     }
   ],
-
   "it_services": [
     {
       "service_name": "nexid-service",
@@ -141,7 +212,6 @@
       "last_restart": "2026-06-18T11:20:00"
     }
   ],
-
   "it_logs": [
     {
       "service": "nexid-service",

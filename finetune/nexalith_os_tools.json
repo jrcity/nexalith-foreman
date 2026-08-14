@@ -1,0 +1,127 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "list_directory",
+      "description": "Lists files in a specific directory.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "The directory path to list."
+          }
+        },
+        "required": [
+          "path"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "read_file_lines",
+      "description": "Reads a specific range of lines from a file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "filepath": {
+            "type": "string"
+          },
+          "start_line": {
+            "type": "integer",
+            "description": "1-indexed starting line"
+          },
+          "end_line": {
+            "type": "integer",
+            "description": "1-indexed ending line"
+          }
+        },
+        "required": [
+          "filepath",
+          "start_line",
+          "end_line"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "replace_file_content",
+      "description": "Replaces a specific block of text in a file.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "filepath": {
+            "type": "string"
+          },
+          "target_text": {
+            "type": "string",
+            "description": "The exact text to find and replace"
+          },
+          "replacement_text": {
+            "type": "string",
+            "description": "The new text to insert"
+          }
+        },
+        "required": [
+          "filepath",
+          "target_text",
+          "replacement_text"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "run_npm_script",
+      "description": "Runs a script defined in package.json (e.g. build, lint).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "script_name": {
+            "type": "string",
+            "description": "Name of the script to run"
+          }
+        },
+        "required": [
+          "script_name"
+        ]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "git_status",
+      "description": "Checks the current git working tree status.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "git_commit",
+      "description": "Commits all changes with a message.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The commit message"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
+    }
+  }
+]
