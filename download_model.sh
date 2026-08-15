@@ -8,9 +8,9 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL_DIR="$HERE/model"
-MODEL_FILE="$MODEL_DIR/qwen2.5-3b-instruct-q4_k_m.gguf"
+MODEL_FILE="$MODEL_DIR/nexalith-foreman-q4km.gguf"
 # ── Replace this URL with your public model weight URL ─────────────────────────
-MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf"
+MODEL_URL="https://huggingface.co/jrcity/nexalith-foreman-q4km/resolve/main/nexalith-foreman-q4km.gguf"
 # ───────────────────────────────────────────────────────────────────────────────
 mkdir -p "$MODEL_DIR"
 if [[ -f "$MODEL_FILE" ]]; then
