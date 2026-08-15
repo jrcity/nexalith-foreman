@@ -10,7 +10,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODEL_DIR="$HERE/model"
 MODEL_FILE="$MODEL_DIR/nexalith-foreman-q4km.gguf"
 # ── Replace this URL with your public model weight URL ─────────────────────────
-MODEL_URL="https://huggingface.co/jrcity/nexalith-foreman-q4km/resolve/main/nexalith-foreman-q4km.gguf"
+MODEL_URL="https://huggingface.co/jrcity/nexalith-foreman-q4km/resolve/main/qwen2.5-3b-instruct.Q4_K_M.gguf"
 # ───────────────────────────────────────────────────────────────────────────────
 mkdir -p "$MODEL_DIR"
 if [[ -f "$MODEL_FILE" ]]; then
